@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys
 from PyQt4 import QtGui, QtCore
-
+import random # Q 3
 
 
 class Hello(QtGui.QWidget):
@@ -15,7 +15,7 @@ class Hello(QtGui.QWidget):
     def initUI(self):               
         self.setWindowTitle('Hello')  
         self.lout = QtGui.QFormLayout()  
-        self.text = QtGui.QTextEdit("Hello Every one this is awesome GUI")
+        self.text = QtGui.QTextEdit("Hello Everyone this is awesome GUI")
         self.text.setReadOnly(True)
         self.lout.addRow("", self.text)
         self.setLayout(self.lout)
@@ -23,7 +23,6 @@ class Hello(QtGui.QWidget):
     def keyPressEvent(self, event):
         if event.key() == 16777220:
             self.enterPressed.emit()
-        print event.key()
 
 
 class Buttons(QtGui.QWidget):
@@ -73,10 +72,10 @@ class Question1(QtGui.QWidget):
 
         self.calcBtn = QtGui.QPushButton("Calculate")
         self.calcBtn.clicked.connect(self.Calculate)
-        self.lout.addRow("btn", self.calcBtn)
+        self.lout.addRow("", self.calcBtn)
 
         self.backBtn = QtGui.QPushButton("Back")
-        self.lout.addRow("btn", self.backBtn)
+        self.lout.addRow("", self.backBtn)
 
         self.setLayout(self.lout)
 
@@ -87,7 +86,7 @@ class Question1(QtGui.QWidget):
             E = 0.5*m*v**2
             self.resline.setText("{} Jouls".format(E))
         except Exception as ex:
-            self.resline.setText(ex)
+            self.resline.setText(str(ex))
 
 class Question2(QtGui.QWidget):
     def __init__(self):
@@ -95,13 +94,37 @@ class Question2(QtGui.QWidget):
         self.initUI()
         
     def initUI(self):               
-        # self.setWindowTitle('Question1')  
+        self.k = 0.5399568035
         self.lout = QtGui.QFormLayout()  
-        self.lout.addRow("simple2", QtGui.QLineEdit())
+
+        self.question = QtGui.QTextEdit(u"Program takes Kilometers as input and produces corresponding number of nautical miles") 
+        self.question.setReadOnly(1)
+        self.lout.addRow("Question 2", self.question)
+
+        
+        self.kmline = QtGui.QLineEdit()
+        self.lout.addRow("km", self.kmline)
+
+        self.resline = QtGui.QLineEdit()
+        self.resline.setReadOnly(1)
+        self.lout.addRow("Result", self.resline)
+        self.calcBtn = QtGui.QPushButton("Calculate")
+        self.calcBtn.clicked.connect(self.Calculate)
+        self.lout.addRow("", self.calcBtn)
+
+
         self.backBtn = QtGui.QPushButton("Back")
-        self.lout.addRow("btn", self.backBtn)
+        self.lout.addRow("", self.backBtn)
 
         self.setLayout(self.lout)
+
+    def Calculate(self):
+        try:
+            km = float(self.kmline.text())
+            nmi = self.k * km
+            self.resline.setText("{} nmi".format(nmi))
+        except Exception as ex:
+            self.resline.setText(str(ex))
 
 class Question3(QtGui.QWidget):
     def __init__(self):
@@ -109,13 +132,65 @@ class Question3(QtGui.QWidget):
         self.initUI()
         
     def initUI(self):               
-        # self.setWindowTitle('Question1')  
+        self.betamount = None
+        self.roll = 1
+        self.loose = False
+
         self.lout = QtGui.QFormLayout()  
-        self.lout.addRow("simple3", QtGui.QLineEdit())
+
+        self.question = QtGui.QTextEdit(u"Game of lucky sevens.") 
+        self.question.setReadOnly(1)
+        self.lout.addRow("Question 3", self.question)
+
+        
+        self.betamountline = QtGui.QLineEdit()
+        self.lout.addRow("Bet amount", self.betamountline)
+
+        self.resline = QtGui.QLineEdit()
+        self.resline.setReadOnly(1)
+        self.lout.addRow("Result", self.resline)
+
+        self.rollBtn = QtGui.QPushButton("Roll")
+        self.rollBtn.clicked.connect(self.Roll)
+        self.lout.addRow("", self.rollBtn)
+
+
         self.backBtn = QtGui.QPushButton("Back")
-        self.lout.addRow("btn", self.backBtn)
+        self.lout.addRow("", self.backBtn)
 
         self.setLayout(self.lout)
+
+    def Roll(self):
+        try:
+            if self.loose:
+                return
+
+            if self.betamount is None:
+                self.betamount = float(self.betamountline.text())
+
+            d1 = random.randint(1,7)
+            d2 = random.randint(1,7)
+            if d1+d2 == 7:
+                self.betamount += 4
+                state = "Win"
+            else:
+                self.betamount -= 1
+                state = "Loose"
+
+            if self.betamount <= 0:
+                self.loose = True
+                self.resline.setText("Game Over")
+                return
+
+            self.resline.setText("Roll {roll}, Dots count {dcounts}, {state}, Bet amount {betamount}".format(roll = self.roll, dcounts=d1+d2, state=state, betamount=self.betamount))
+            self.roll += 1
+
+        except Exception as ex:
+            self.resline.setText(str(ex))
+
+    def keyPressEvent(self, event):
+        if event.key() == 16777220:
+            self.Roll()
 
 class Question4(QtGui.QWidget):
     def __init__(self):
@@ -212,7 +287,7 @@ class MainWin(QtGui.QMainWindow):
 
         self.setCentralWidget(self.Stack)
         self.display(0)
-        self.move(500,500)
+        self.move(500,200)
         self.show()
         
 
