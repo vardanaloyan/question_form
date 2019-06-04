@@ -57,12 +57,37 @@ class Question1(QtGui.QWidget):
         
     def initUI(self):               
         # self.setWindowTitle('Question1')  
-        self.lout = QtGui.QFormLayout()  
-        self.lout.addRow("simple1", QtGui.QLineEdit())
+        self.lout = QtGui.QFormLayout() 
+        self.question = QtGui.QTextEdit(u"The kinetic energy of a moving object is given by the formula KE=(1/2)mv**2. Where m is object’s mass and v is the velocity.") 
+        self.question.setReadOnly(1)
+        self.lout.addRow("Question 1", self.question)
+        self.vline = QtGui.QLineEdit()
+        self.lout.addRow("v", self.vline)
+
+        self.mline = QtGui.QLineEdit()
+        self.lout.addRow("m", self.mline)
+
+        self.resline = QtGui.QLineEdit()
+        self.resline.setReadOnly(1)
+        self.lout.addRow("Result", self.resline)
+
+        self.calcBtn = QtGui.QPushButton("Calculate")
+        self.calcBtn.clicked.connect(self.Calculate)
+        self.lout.addRow("btn", self.calcBtn)
+
         self.backBtn = QtGui.QPushButton("Back")
         self.lout.addRow("btn", self.backBtn)
 
         self.setLayout(self.lout)
+
+    def Calculate(self):
+        try:
+            v = float(self.vline.text())
+            m = float(self.mline.text())
+            E = 0.5*m*v**2
+            self.resline.setText("{} Jouls".format(E))
+        except Exception as ex:
+            self.resline.setText(ex)
 
 class Question2(QtGui.QWidget):
     def __init__(self):
@@ -187,7 +212,7 @@ class MainWin(QtGui.QMainWindow):
 
         self.setCentralWidget(self.Stack)
         self.display(0)
-
+        self.move(500,500)
         self.show()
         
 
