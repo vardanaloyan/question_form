@@ -196,30 +196,122 @@ class Question4(QtGui.QWidget):
     def __init__(self):
         super(Question4, self).__init__()
         self.initUI()
-        
+
     def initUI(self):               
-        # self.setWindowTitle('Question1')  
         self.lout = QtGui.QFormLayout()  
-        self.lout.addRow("simple4", QtGui.QLineEdit())
+
+        self.question = QtGui.QTextEdit(u"Bank account") 
+
+        self.question.setReadOnly(1)
+        self.lout.addRow("Question 4", self.question)
+
+        
+        self.startbalanceline = QtGui.QLineEdit()
+        self.lout.addRow("Bet amount", self.startbalanceline)
+
+        self.resline = QtGui.QTextEdit()
+        self.resline.setReadOnly(1)
+        self.resline.setStyleSheet ('''
+        QTextEdit {
+            font: 10pt "Consolas";
+        }
+        ''')
+        self.lout.addRow("Result", self.resline)
+
+        self.calcBtn = QtGui.QPushButton("Calculate")
+        self.calcBtn.clicked.connect(self.Calculate)
+        self.lout.addRow("", self.calcBtn)
+
+
         self.backBtn = QtGui.QPushButton("Back")
-        self.lout.addRow("btn", self.backBtn)
+        self.lout.addRow("", self.backBtn)
 
         self.setLayout(self.lout)
 
+    def Calculate(self):
+        try:
+            self.startBalance = None
+            self.month = 1
+            self.resline.clear()
+            headers = '{:<10}'.format("Month"), '{:<20}'.format("Starting Balance"), '{:<20}'.format("Interest"), '{:<10}'.format("Principal"), '{:<10}'.format("Payment"), format("Ending Balance")
+            headers = "".join(headers)
+            print "Question 4"
+            print headers
+            self.resline.append(headers)
+            self.startBalance = float(self.startbalanceline.text())
+            self.payment = self.startBalance*(20./100 - 5./100)
+            while self.startBalance >= self.payment:
+                self.interest = self.startBalance * (12./(12*100))
+                self.principal = self.payment - self.interest
+                self.endBalance = self.startBalance - self.payment
+                res = '{:<10}'.format("{:2.0f}".format(self.month)), '{:<20}'.format("{:6.2f}".format(self.startBalance)), '{:<20}'.format("{:6.2f}".format(round(self.interest,2))), '{:<10}'.format("{:6.2f}".format(self.principal)), '{:<10}'.format("{:6.2f}".format(self.payment)), format("{:6.2f}".format(self.endBalance))
+                res = "".join(res)
+                print res
+                self.resline.append(res + "\n")
+                self.month += 1
+                self.startBalance = self.endBalance
+            # self.resline.setText("{} nmi".format(nmi))
+        except Exception as ex:
+            self.resline.setText(str(ex))
 
 class Question5(QtGui.QWidget):
     def __init__(self):
         super(Question5, self).__init__()
         self.initUI()
         
+        
     def initUI(self):               
-        # self.setWindowTitle('Question1')  
         self.lout = QtGui.QFormLayout()  
-        self.lout.addRow("simple5", QtGui.QLineEdit())
+
+        self.question = QtGui.QTextEdit(u"Converter") 
+        self.question.setReadOnly(1)
+        self.lout.addRow("Question 5", self.question)
+
+        
+        self.decline = QtGui.QLineEdit()
+        self.decline.setMaxLength(3)
+        self.onlyInt = QtGui.QIntValidator()
+        self.decline.setValidator(self.onlyInt)
+
+        self.lout.addRow("Decimal", self.decline)
+
+        self.octline = QtGui.QLineEdit()
+        self.octline.setReadOnly(1)
+        self.lout.addRow("Octal", self.octline)
+
+        self.binline = QtGui.QLineEdit()
+        self.binline.setReadOnly(1)
+        self.lout.addRow("Binary", self.binline)
+
+        self.hexline = QtGui.QLineEdit()
+        self.hexline.setReadOnly(1)
+        self.lout.addRow("Hexadecimal", self.hexline)
+
+        self.calcBtn = QtGui.QPushButton("Calculate")
+        self.calcBtn.clicked.connect(self.Calculate)
+        self.lout.addRow("", self.calcBtn)
+
+
         self.backBtn = QtGui.QPushButton("Back")
-        self.lout.addRow("btn", self.backBtn)
+        self.lout.addRow("", self.backBtn)
 
         self.setLayout(self.lout)
+
+    def Calculate(self):
+        try:
+            self.octline.clear()
+            self.hexline.clear()
+            self.binline.clear()
+            dec = int(self.decline.text())
+            _oct = oct(dec)
+            _bin = bin(dec)
+            _hex = hex(dec)
+            self.octline.setText(str(_oct))
+            self.binline.setText(str(_bin))
+            self.hexline.setText(str(_hex))
+
+        except Exception as ex:
+            self.octline.setText(str(ex))
 
 class Question6(QtGui.QWidget):
     def __init__(self):
@@ -227,13 +319,43 @@ class Question6(QtGui.QWidget):
         self.initUI()
         
     def initUI(self):               
-        # self.setWindowTitle('Question1')  
         self.lout = QtGui.QFormLayout()  
-        self.lout.addRow("simple6", QtGui.QLineEdit())
+
+        self.question = QtGui.QTextEdit(u"Some text") 
+        self.question.setReadOnly(1)
+        self.lout.addRow("Question 6", self.question)
+
+        
+        self.pathline = QtGui.QLineEdit()
+        self.lout.addRow("Path", self.pathline)
+
+        self.resline = QtGui.QTextEdit()
+        self.resline.setReadOnly(1)
+        self.lout.addRow("Result", self.resline)
+
+        self.calcBtn = QtGui.QPushButton("Calculate")
+        self.calcBtn.clicked.connect(self.Calculate)
+        self.lout.addRow("", self.calcBtn)
+
+
         self.backBtn = QtGui.QPushButton("Back")
-        self.lout.addRow("btn", self.backBtn)
+        self.lout.addRow("", self.backBtn)
 
         self.setLayout(self.lout)
+
+    def Calculate(self):
+        try:
+            path = self.pathline.text()
+            self.resline.clear()
+            with open(path, "r") as f:
+                for line in f:
+                    last_name, hourly_wage, hours_worked = line.split()
+                    pay = float(hourly_wage) * float(hours_worked)
+                    print last_name, "   ", pay
+                    self.resline.append(last_name + "   " + str(pay))
+        except Exception as ex:
+            self.resline.setText(str(ex))
+
 
 class MainWin(QtGui.QMainWindow):
     
