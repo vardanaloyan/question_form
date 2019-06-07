@@ -15,7 +15,11 @@ class Hello(QtGui.QWidget):
     def initUI(self):               
         self.setWindowTitle('Hello')  
         self.lout = QtGui.QFormLayout()  
-        self.text = QtGui.QTextEdit("Hello Everyone this is awesome GUI")
+        self.text = QtGui.QTextEdit("Welcome to Python Program. You may press the Enter key and you will be directed to six different tasks")
+        policy = self.text.sizePolicy()
+        policy.setVerticalStretch(1)
+        self.text.setSizePolicy(policy)
+
         self.text.setReadOnly(True)
         self.lout.addRow("", self.text)
         self.setLayout(self.lout)
@@ -38,22 +42,32 @@ class Buttons(QtGui.QWidget):
         self.btn5 = QtGui.QPushButton("Question 5")
         self.btn6 = QtGui.QPushButton("Question 6")
 
+        self.btn1.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.btn2.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.btn3.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.btn4.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.btn5.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.btn6.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+       
         self.grid = QtGui.QGridLayout()
         self.grid.addWidget(self.btn1, 0, 0)
+        # self.grid.setRowStretch(1, 5)
         self.grid.addWidget(self.btn2, 0, 1)
         self.grid.addWidget(self.btn3, 0, 2)
         self.grid.addWidget(self.btn4, 1, 0)
         self.grid.addWidget(self.btn5, 1, 1)
         self.grid.addWidget(self.btn6, 1, 2)
         self.setLayout(self.grid)
-
-
-
 class Question1(QtGui.QWidget):
     def __init__(self):
         super(Question1, self).__init__()
         self.initUI()
-        
+    
+    def reset(self):
+        self.vline.clear()
+        self.mline.clear()
+        self.resline.clear()
+
     def initUI(self):               
         # self.setWindowTitle('Question1')  
         self.lout = QtGui.QFormLayout() 
@@ -75,6 +89,7 @@ class Question1(QtGui.QWidget):
         self.lout.addRow("", self.calcBtn)
 
         self.backBtn = QtGui.QPushButton("Back")
+        self.backBtn.clicked.connect(self.reset)
         self.lout.addRow("", self.backBtn)
 
         self.setLayout(self.lout)
@@ -92,7 +107,11 @@ class Question2(QtGui.QWidget):
     def __init__(self):
         super(Question2, self).__init__()
         self.initUI()
-        
+    
+    def reset(self):
+        self.kmline.clear()
+        self.resline.clear()
+
     def initUI(self):               
         self.k = 0.5399568035
         self.lout = QtGui.QFormLayout()  
@@ -114,6 +133,7 @@ class Question2(QtGui.QWidget):
 
 
         self.backBtn = QtGui.QPushButton("Back")
+        self.backBtn.clicked.connect(self.reset)
         self.lout.addRow("", self.backBtn)
 
         self.setLayout(self.lout)
@@ -131,6 +151,12 @@ class Question3(QtGui.QWidget):
         super(Question3, self).__init__()
         self.initUI()
         
+    def reset(self):
+        self.betamount = None
+        self.roll = 1
+        self.loose = False
+        self.betamountline.clear()    
+        self.resline.clear()
     def initUI(self):               
         self.betamount = None
         self.roll = 1
@@ -138,7 +164,7 @@ class Question3(QtGui.QWidget):
 
         self.lout = QtGui.QFormLayout()  
 
-        self.question = QtGui.QTextEdit(u"Game of lucky sevens.") 
+        self.question = QtGui.QTextEdit(u"Game of lucky sevens.\nPlease make a bet. We will tow a pair of dice. If the dots count 7, then you will wins $4. Otherwise, you will lose $1.") 
         self.question.setReadOnly(1)
         self.lout.addRow("Question 3", self.question)
 
@@ -156,6 +182,7 @@ class Question3(QtGui.QWidget):
 
 
         self.backBtn = QtGui.QPushButton("Back")
+        self.backBtn.clicked.connect(self.reset)
         self.lout.addRow("", self.backBtn)
 
         self.setLayout(self.lout)
@@ -197,20 +224,29 @@ class Question4(QtGui.QWidget):
         super(Question4, self).__init__()
         self.initUI()
 
+    def reset(self):
+        self.startbalanceline.clear()
+        self.resline.clear()
+
     def initUI(self):               
         self.lout = QtGui.QFormLayout()  
 
-        self.question = QtGui.QTextEdit(u"Bank account") 
+        self.question = QtGui.QTextEdit(u"Please enter the price of the item. We will show you your entire payment structure.") 
 
         self.question.setReadOnly(1)
         self.lout.addRow("Question 4", self.question)
 
         
         self.startbalanceline = QtGui.QLineEdit()
-        self.lout.addRow("Bet amount", self.startbalanceline)
+        self.lout.addRow("Price", self.startbalanceline)
 
         self.resline = QtGui.QTextEdit()
         self.resline.setReadOnly(1)
+
+        policy = self.resline.sizePolicy()
+        policy.setVerticalStretch(1)
+        self.resline.setSizePolicy(policy)
+
         self.resline.setStyleSheet ('''
         QTextEdit {
             font: 10pt "Consolas";
@@ -224,6 +260,7 @@ class Question4(QtGui.QWidget):
 
 
         self.backBtn = QtGui.QPushButton("Back")
+        self.backBtn.clicked.connect(self.reset)
         self.lout.addRow("", self.backBtn)
 
         self.setLayout(self.lout)
@@ -238,8 +275,10 @@ class Question4(QtGui.QWidget):
             print "Question 4"
             print headers
             self.resline.append(headers)
-            self.startBalance = float(self.startbalanceline.text())
-            self.payment = self.startBalance*(20./100 - 5./100)
+            self.price = float(self.startbalanceline.text())
+            self.startBalance = self.price*0.8
+            # self.payment = self.startBalance*(20./100 - 5./100)
+            self.payment = self.startBalance*5./100
             while self.startBalance >= self.payment:
                 self.interest = self.startBalance * (12./(12*100))
                 self.principal = self.payment - self.interest
@@ -259,11 +298,16 @@ class Question5(QtGui.QWidget):
         super(Question5, self).__init__()
         self.initUI()
         
+    def reset(self):
+        self.decline.clear()
+        self.octline.clear()
+        self.hexline.clear()
+        self.binline.clear()
         
     def initUI(self):               
         self.lout = QtGui.QFormLayout()  
 
-        self.question = QtGui.QTextEdit(u"Converter") 
+        self.question = QtGui.QTextEdit(u"Please enter a 3-digit decimal number and we will tell you the Octal, Binary and Hexadecimal number it correlates to.") 
         self.question.setReadOnly(1)
         self.lout.addRow("Question 5", self.question)
 
@@ -293,6 +337,7 @@ class Question5(QtGui.QWidget):
 
 
         self.backBtn = QtGui.QPushButton("Back")
+        self.backBtn.clicked.connect(self.reset)
         self.lout.addRow("", self.backBtn)
 
         self.setLayout(self.lout)
@@ -306,9 +351,9 @@ class Question5(QtGui.QWidget):
             _oct = oct(dec)
             _bin = bin(dec)
             _hex = hex(dec)
-            self.octline.setText(str(_oct))
-            self.binline.setText(str(_bin))
-            self.hexline.setText(str(_hex))
+            self.octline.setText(str(_oct)[1:])
+            self.binline.setText(str(_bin)[2:])
+            self.hexline.setText(str(_hex)[2:].upper())
 
         except Exception as ex:
             self.octline.setText(str(ex))
@@ -317,17 +362,21 @@ class Question6(QtGui.QWidget):
     def __init__(self):
         super(Question6, self).__init__()
         self.initUI()
-        
+    
+    def reset(self):
+        self.pathline.clear()
+        self.resline.clear()
+
     def initUI(self):               
         self.lout = QtGui.QFormLayout()  
 
-        self.question = QtGui.QTextEdit(u"Some text") 
+        self.question = QtGui.QTextEdit(u"Please enter the name of the employee. We will let you know his/her wage.") 
         self.question.setReadOnly(1)
         self.lout.addRow("Question 6", self.question)
 
         
         self.pathline = QtGui.QLineEdit()
-        self.lout.addRow("Path", self.pathline)
+        self.lout.addRow("Filename", self.pathline)
 
         self.resline = QtGui.QTextEdit()
         self.resline.setReadOnly(1)
@@ -339,13 +388,15 @@ class Question6(QtGui.QWidget):
 
 
         self.backBtn = QtGui.QPushButton("Back")
+        self.backBtn.clicked.connect(self.reset)
+
         self.lout.addRow("", self.backBtn)
 
         self.setLayout(self.lout)
 
     def Calculate(self):
         try:
-            path = self.pathline.text()
+            path = str(self.pathline.text())+".txt"
             self.resline.clear()
             with open(path, "r") as f:
                 for line in f:
@@ -410,7 +461,7 @@ class MainWin(QtGui.QMainWindow):
         self.setCentralWidget(self.Stack)
         self.display(0)
         self.move(500,200)
-        self.show()
+        self.showMaximized()
         
 
 
