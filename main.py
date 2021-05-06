@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys
 from PyQt4 import QtGui, QtCore
-import random # Q 3
+import random
 
 
 class Hello(QtGui.QWidget):
@@ -11,7 +11,7 @@ class Hello(QtGui.QWidget):
     def __init__(self):
         super(Hello, self).__init__()
         self.initUI()
-        
+
     def initUI(self):               
         self.setWindowTitle('Hello')  
         self.lout = QtGui.QFormLayout()  
